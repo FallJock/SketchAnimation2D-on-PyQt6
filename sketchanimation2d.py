@@ -142,17 +142,13 @@ class MainWindow(QMainWindow):
         # регулирует толщину [ - уменьшает  ] - увеличивает
         self.shcut3 = QShortcut(QKeySequence("]"), self)
         self.shcut3.activated.connect(self.up)
-        self.shcut3.activated.connect(lambda s=self, x="]":  s.labelEvent.setText(x))
         self.shcut4 = QShortcut(QKeySequence("["), self)
         self.shcut4.setKey(Qt.Key.Key_BracketLeft)
         self.shcut4.activated.connect(self.down)
-        self.shcut4.activated.connect(lambda s=self, x="[":  s.labelEvent.setText(x))
         self.shcut5 = QShortcut(QKeySequence("9"), self)
         self.shcut5.activated.connect(self.timel.minusDur)
-        self.shcut5.activated.connect(lambda s=self, x="9":  s.labelEvent.setText(x))
         self.shcut6 = QShortcut(QKeySequence("0"), self)
         self.shcut6.activated.connect(self.timel.plusDur)
-        self.shcut6.activated.connect(lambda s=self, x="0":  s.labelEvent.setText(x))
         
         self.cur = [0, 0]
         self.isctrl = False
