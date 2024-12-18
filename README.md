@@ -48,11 +48,24 @@ class QWidget(QtCore.QObject):
 class TimeLine(QWidget): pass
 ```
 
-<iframe
-  src="https://carbon.now.sh/embed?bg=rgba%2874%2C144%2C226%2C0%29&t=vscode&wt=boxy&l=python&width=680&ds=false&dsyoff=20px&dsblur=68px&wc=false&wa=true&pv=56px&ph=56px&ln=true&fl=320&fm=Fira+Code&fs=14px&lh=152%25&si=false&es=2x&wm=false&code=...%250Aclass%2520QWidget%28QtCore.QObject%29%253A%250A%2520%2520def%2520font%28self%29%253A%250A%2520%2520%2520%2520return%2520Literal%28%2522%2525s.font%28%29%2522%2520%2525%2520self%29%250A%250A%2520%2520def%2520minimumSizeHint%28self%29%253A%250A%2520%2520%2520%2520%2520return%2520Literal%28%2522%2525s.minimumSizeHint%28%29%2522%2520%2525%2520self%29%250A%250A%2520%2520def%2520sizePolicy%28self%29%253A%250A%2520%2520%2520%2520%2520sp%2520%253D%2520LiteralProxyClass%28%29%250A%2520%2520%2520%2520%2520sp._uic_name%2520%253D%2520%2522%2525s.sizePolicy%28%29%2522%2520%2525%2520self%250A%2520%2520%2520%2520%2520return%2520sp%250A%2523%2520%25D0%2594%25D0%25BE%25D0%25B1%25D0%25B0%25D0%25B2%25D0%25BB%25D1%258F%25D0%25B5%25D0%25BC%2520%25D1%2581%25D1%258E%25D0%25B4%25D0%25B0%2520-%2520class%2520TimeLine%28QWidget%29%253A%2520pass%250Aclass%2520QDialog%28QWidget%29%253A%2520pass%250Aclass%2520QColorDialog%28QDialog%29%253A%2520pass%250A..."
-  style="width: 616px; height: 497px; border:0; transform: scale(1); overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin">
-</iframe>
+```python
+...
+class QWidget(QtCore.QObject):
+    def font(self):
+        return Literal("%s.font()" % self)
+
+    def minimumSizeHint(self):
+        return Literal("%s.minimumSizeHint()" % self)
+
+    def sizePolicy(self):
+        sp = LiteralProxyClass()
+        sp._uic_name = "%s.sizePolicy()" % self
+        return sp
+# Добавляем сюда - class TimeLine(QWidget): pass
+class QDialog(QWidget): pass
+class QColorDialog(QDialog): pass
+...
+```
 
 Сохраняем изменения и компилируем заново `sketchanimation2d.py`\
 после этого можно удалять в `qtproxies.py` класс с:\
