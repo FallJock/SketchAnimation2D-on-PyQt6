@@ -12,7 +12,6 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("gui/main.ui", self)
-        
         # может принимать перекидывание файлов
         self.setAcceptDrops(True)
         self.setFixedSize(1000, 700)
@@ -87,15 +86,12 @@ class MainWindow(QMainWindow):
         self.b = QPen(self.pen_color, self.nac, Qt.PenStyle.SolidLine, Qt.PenCapStyle.SquareCap, Qt.PenJoinStyle.RoundJoin)
         self.p = QPen(self.pen_color, self.nac, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap, Qt.PenJoinStyle.RoundJoin)
 
-        layout = QVBoxLayout()
-        self.timel = TimeLine(80, 520, h=80)
-        layout.addWidget(self.timel)
-        layout.setGeometry(QRect(80, 520, 720, 80))
-        self.centralwidget.setLayout(layout)
-        self.setCentralWidget(self.centralwidget)
-        
+        # добавление таймлайна
+        self.timel = TimeLine(parent=self)
+        self.timel.setGeometry(80, 520, self.timel.w, self.timel.h)
         self.timel.addFrame(1, self.label.pixmap())
         self.timel.checkFrame(1, True)
+        
         self.pathsave = "save"
         self.path = "save"
         if not os.path.exists(self.path):
@@ -349,7 +345,7 @@ class MainWindow(QMainWindow):
             self.cur[1] = y
         # нажата ЛКМ
         if e.buttons() == Qt.MouseButton.LeftButton:
-            if self.timel.checkFrameM(x, y - 30, True):
+            if self.timel.checkFrameM(x, y, True):
                 if self.isplay:
                     self.timeline.setPaused(True)
                     if self.pausef:
@@ -374,7 +370,7 @@ class MainWindow(QMainWindow):
                     os.remove("time_file.png")
                     self.fileUpdate()
             else:
-                self.timel.addFrameM(x, y - 30, self.label.pixmap())
+                self.timel.addFrameM(x, y, self.label.pixmap())
             self.update()
                 
         if e.buttons() == Qt.MouseButton.RightButton and self.isctrl:
@@ -631,7 +627,7 @@ class MainWindow(QMainWindow):
                 self.fileUpdate()
                     
         if e.key() == Qt.Key.Key_A:
-            if self.timel.selectedframe and not self.timel.checkFrameM(x, y - 30):
+            if self.timel.selectedframe and not self.timel.checkFrameM(x, y):
                 sl = self.timel.selectedframe
                 indsl = sorted(self.timel.frames).index(sl.num) 
                 if indsl + 1 < len(self.timel.frames):

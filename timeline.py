@@ -3,6 +3,7 @@ from PyQt6.QtGui import *
 from PyQt6.QtWidgets import QWidget
 from math import floor
 
+
 # константные параметры - цвет и стиль
 COLORTEXT = QColor(200, 200, 200)
 COLORFRAME = QColor(80, 100, 190)
@@ -57,14 +58,8 @@ class Frame:
 
 # Виджет таймлайн содержащий фреймы, а также имеет возможность с фреймами взаимодействовать и отображать
 class TimeLine(QWidget):
-    def __init__(self, x=0, y=0, w=720, h=80, fps=24, parent=None):
-        if parent:
-            super().__init__(parent=parent)
-        else:
-            super().__init__()
-        # координаты местонахождения
-        self.x = x
-        self.y = y
+    def __init__(self, parent=None, w=720, h=80, fps=24):
+        super().__init__(parent=parent)
         # ширина и длина таймлайна
         self.w = w
         self.h = h
@@ -88,8 +83,6 @@ class TimeLine(QWidget):
         self.maxnum = 0
         # насколько был совершён скролл вправо (потеренная часть)
         self.scrollX = 0
-        # задаёт размер и координату виджета таймлайна
-        self.setGeometry(self.x, self.y, self.w, self.h)
     
     # скролл вправа (передвижение по таймлайну вправа)
     def rightScrollx(self, x):
@@ -111,14 +104,14 @@ class TimeLine(QWidget):
     
     # координата в таймлайне?
     def inTimeline(self, x, y):
-        fnx, fny = self.x + self.w, self.y + self.h
-        return (((x - self.x) * (x - fnx)) <= 0 and\
-            ((y - self.y) * (y - fny)) <= 0)
+        fnx, fny = self.x() + self.w, self.y() + self.h
+        return (((x - self.x()) * (x - fnx)) <= 0 and\
+            ((y - self.y()) * (y - fny)) <= 0)
     
     # координата в области с фреймами?
     def inFrames(self, x, y):
         if self.inTimeline(x, y):
-            my = y - self.y
+            my = y - self.y()
             fry, fry2 = self.htime, self.h
             if ((my - fry) * (my - fry2)) <= 0:
                 return True
@@ -126,15 +119,15 @@ class TimeLine(QWidget):
     
     # подсчёт места в таймлайне по x мыши
     def flo(self, x):
-        mx = x - self.x
-        key = floor(mx / self.widthf)
+        mx = x - self.x()
+        key = floor(mx / self.widthf) + 1
         return key
 
     # проверка есть ли фрейм на этой координате (может выбрать этот фрейм при select=True)
     def checkFrameM(self, x, y, select=False):
         if self.inFrames(x, y):
-            mx = x - self.x
-            key = floor(mx / self.widthf)
+            mx = x - self.x()
+            key = floor(mx / self.widthf) + 1
             k = self.inBetweenFrame(key + self.getStartNumframe())
             if k:
                 key = k
@@ -198,9 +191,9 @@ class TimeLine(QWidget):
     # добавить фрейм с картинкой по координате мыши
     def addFrameM(self, x, y, pic):
         if self.inFrames(x, y):
-            mx = x - self.x
+            mx = x - self.x()
             # добавление
-            key = floor(mx / self.widthf) + self.getStartNumframe()
+            key = floor(mx / self.widthf) + 1 + self.getStartNumframe()
             if self.inBetweenFrame(key):
                 return False
             fram = Frame(key, picture=pic)
@@ -291,8 +284,8 @@ class TimeLine(QWidget):
     # удаление фрейма по координате мыши
     def delFrameM(self, x, y):
         if self.inFrames(x, y) and self.checkFrame(x, y):
-            mx = x - self.x
-            key = floor(mx / self.widthf) + self.getStartNumframe()
+            mx = x - self.x()
+            key = floor(mx / self.widthf) + 1 + self.getStartNumframe()
             m = self.frames.pop(key)
             self.maxnum = max(max(self.frames), self.maxnum)
             return m
@@ -316,13 +309,13 @@ class TimeLine(QWidget):
     # отрисовка таймлайна
     def paintEvent(self, event):
         # позиция таймлайна
-        px, py = self.x, self.y
+        px, py = 0, 0
         qp = QPainter()
         qp.begin(self)
         qp.setPen(self.textColor)
         qp.setFont(self.font)
         qp.setRenderHint(QPainter.RenderHint.Antialiasing)
-        
+        print(px, py)
         # фон для таймлайна
         path = QPainterPath()
         qp.setPen(QColor(10, 10, 10))
@@ -332,7 +325,7 @@ class TimeLine(QWidget):
         
         stfram = self.getStartNumframe()
         # перебор фреймов до ширины таймлайна
-        for num in range(floor(self.w / self.widthf)):
+        for num in range(floor(self.w / self.widthf) + 1):
             # каждые например 24фпс пишется его секунда
             if (num + stfram) % self.fps == 0:
                 qp.setPen(QColor(70, 160, 200))
@@ -355,7 +348,7 @@ class TimeLine(QWidget):
                 int(px + ((num) * self.widthf)), py + int(self.htime))
         
         # отрисовка фрейма и картинок
-        for num in range(1, floor(self.w / self.widthf) + 1):
+        for num in range(1, floor(self.w / self.widthf) + 2):
             # stfram - утеренный промежуток после скрола, для верного отображения фреймов
             if (num + stfram) in self.frames:
                 frm = self.frames[(num + stfram)]

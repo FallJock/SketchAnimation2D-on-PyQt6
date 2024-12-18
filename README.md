@@ -1,5 +1,10 @@
 ### [УСТАНОВКА и ЗАПУСК](#raz1) и [ВОЗМОЖНОСТИ ПРОГРАММЫ](#raz2)
 
+Программа по созданию растровой 2D анимации
+
+![Интерфейс](imgMD/Interface.png)
+
+
 <a name="raz1"></a>
 # УСТАНОВКА и ЗАПУСК
 Используется `Visual Studio Code`\
@@ -22,13 +27,44 @@
 
 Для удобной работы с файломи `.ui`, можно установить `Qt Designer`
 
+### Не отображается TimeLine | Таймлайн
+![Интерфейс, но нет таймлайна](imgMD/noTimeline.png)
+### __Решение:__
+В модуле PyQt6 (путь Python)\
+`...\Python\Python{ваша версия}\Lib\site-packages\PyQt6\uic\Compiler\`\
+или путь по пользователю\
+`C:\Users\{пользователь}\AppData\Local\Programs\Python\Python{ваша версия}\Lib\site-packages\PyQt6\uic\Compiler\`
+
+
+Открываем файл `qtproxies.py` в текстовом редакторе например VScode\
+Находим (строка/line - __321__):
+```python
+class QWidget(QtCore.QObject):
+```
+
+после этого класса (строка/line - __332__)\
+добавляем класс:
+```python
+class TimeLine(QWidget): pass
+```
+
+<iframe
+  src="https://carbon.now.sh/embed?bg=rgba%2874%2C144%2C226%2C0%29&t=vscode&wt=boxy&l=python&width=680&ds=false&dsyoff=20px&dsblur=68px&wc=false&wa=true&pv=56px&ph=56px&ln=true&fl=320&fm=Fira+Code&fs=14px&lh=152%25&si=false&es=2x&wm=false&code=...%250Aclass%2520QWidget%28QtCore.QObject%29%253A%250A%2520%2520def%2520font%28self%29%253A%250A%2520%2520%2520%2520return%2520Literal%28%2522%2525s.font%28%29%2522%2520%2525%2520self%29%250A%250A%2520%2520def%2520minimumSizeHint%28self%29%253A%250A%2520%2520%2520%2520%2520return%2520Literal%28%2522%2525s.minimumSizeHint%28%29%2522%2520%2525%2520self%29%250A%250A%2520%2520def%2520sizePolicy%28self%29%253A%250A%2520%2520%2520%2520%2520sp%2520%253D%2520LiteralProxyClass%28%29%250A%2520%2520%2520%2520%2520sp._uic_name%2520%253D%2520%2522%2525s.sizePolicy%28%29%2522%2520%2525%2520self%250A%2520%2520%2520%2520%2520return%2520sp%250A%2523%2520%25D0%2594%25D0%25BE%25D0%25B1%25D0%25B0%25D0%25B2%25D0%25BB%25D1%258F%25D0%25B5%25D0%25BC%2520%25D1%2581%25D1%258E%25D0%25B4%25D0%25B0%2520-%2520class%2520TimeLine%28QWidget%29%253A%2520pass%250Aclass%2520QDialog%28QWidget%29%253A%2520pass%250Aclass%2520QColorDialog%28QDialog%29%253A%2520pass%250A..."
+  style="width: 616px; height: 497px; border:0; transform: scale(1); overflow:hidden;"
+  sandbox="allow-scripts allow-same-origin">
+</iframe>
+
+Сохраняем изменения и компилируем заново `sketchanimation2d.py`\
+после этого можно удалять в `qtproxies.py` класс с:\
+`class TimeLine(QWidget): pass`
+
 <a name="raz2"></a>
 # ВОЗМОЖНОСТИ ПРОГРАММЫ
 1. [Инструменты для рисования](#spe1)
 1. [ТаймЛайн](#spe2)
 1. [Раздел - Файл](#spe3)
 1. [Прочее](#spe4)
-   
+
 
 <a name="spe1"></a>
 ## 1. Инструменты для рисования
